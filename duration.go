@@ -66,11 +66,15 @@ func (d *Duration) GobDecode(data []byte) error {
 }
 
 func (d Duration) String() string {
-	return fmt.Sprintf("\"%s\"", time.Duration(d))
+	return time.Duration(d).String()
 }
 
 func (d Duration) MarshalJSON() ([]byte, error) {
-	return d.MarshalText()
+	b, err := d.MarshalText()
+	if err == nil {
+		b = []byte(fmt.Sprintf("\"%s\"", string(b)))
+	}
+	return b, err
 }
 
 func (d *Duration) UnmarshalJSON(data []byte) error {
