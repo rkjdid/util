@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"github.com/soul9/errors"
+	"github.com/rkjdid/errors"
 	"io"
 	"log"
 	"os"
