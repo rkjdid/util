@@ -8,7 +8,7 @@ import (
 
 const chanSize = 36
 
-// TimeSeries is a naive structure implementation of int timeseries
+// TimeSeries is a naive implementation of int timeseries.
 // It holds a slice of ints between Start and End times with a maximum length.
 // Each int is supposed to be separated by Interval time, but this is obviously dependant on user.
 type TimeSeries struct {
