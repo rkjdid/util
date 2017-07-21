@@ -98,6 +98,17 @@ func (d *TimeSeries) Padded() []int {
 	return data
 }
 
+// SetMaxLength resets d.maxLength.
+// If necessary, oldest data are cropped to match new maximum length.
+func (d *TimeSeries) SetMaxLength(length int) {
+	d.maxLength = length
+	if len(d.Data) > d.maxLength {
+		stripN := len(d.Data) - d.maxLength
+		d.Start = d.Start.Add(time.Duration(stripN*int(d.Interval)))
+		d.Data = d.Data[stripN:]
+	}
+}
+
 // ResetStartTime operates a timeshift on Start time from time.Now()
 // of -len(d.Data) * d.Interval
 func (d *TimeSeries) ResetStartTime() {

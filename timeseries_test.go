@@ -63,6 +63,20 @@ func TestDatalog_Padded(t *testing.T) {
 	}
 }
 
+func TestDatalog_SetMaxLength(t *testing.T) {
+	dtest := NewTimeSeries(2, Duration(time.Second))
+	t0 := dtest.Start
+	dtest.Add(1)
+	dtest.Add(2)
+	dtest.SetMaxLength(1)
+	if expect := []int{2}; !sliceEq(dtest.Data, expect) {
+		t.Errorf("%v != %v", dtest.Data, expect)
+	}
+	if dtest.Start.Sub(t0) != time.Second {
+		t.Errorf("start time should've shifted by 1sec, got %s", dtest.Start.Sub(t0))
+	}
+}
+
 func TestDatalog_Subscribe(t *testing.T) {
 	dtest := NewTimeSeries(2, Duration(time.Second))
 	i, ch := dtest.Subscribe()
