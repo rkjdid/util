@@ -63,10 +63,9 @@ func (d *TimeSeries) Unsubscribe(id int) {
 	d.Unlock()
 }
 
-// Add value to d.Data. If d.Data length is above d.maxLength, do a 1-shift
-// operation on the slice to the left. Add also assumes user behaves and
-// does a time shift on d.Start of d.Interval duration. After appending value,
-// it is broadcasted to subscribed chans.
+// Add appends value to d.Data. If d.Data length is above d.maxLength, do a 1-shift
+// operation on the slice to the left, and a naive shift of +d.Interval on d.Start (data loss).
+// After appending value, it is broadcasted to subscribed chans.
 func (d *TimeSeries) Add(v int) {
 	if d.maxLength > 0 && len(d.Data) >= d.maxLength {
 		d.Data = d.Data[1:]
