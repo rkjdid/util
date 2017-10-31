@@ -103,7 +103,7 @@ func (d *TimeSeries) SetMaxLength(length int) {
 	d.maxLength = length
 	if len(d.Data) > d.maxLength {
 		stripN := len(d.Data) - d.maxLength
-		d.Start = d.Start.Add(time.Duration(stripN*int(d.Interval)))
+		d.Start = d.Start.Add(time.Duration(stripN * int(d.Interval)))
 		d.Data = d.Data[stripN:]
 	}
 }
