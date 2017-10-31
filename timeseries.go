@@ -8,9 +8,12 @@ import (
 
 const chanSize = 36
 
+const panicNegativeLength = "timeseries length must be positive"
+
 // TimeSeries is a naive implementation of int timeseries.
 // It holds a slice of ints between Start and End times with a maximum length.
 // Each int is supposed to be separated by Interval time, but this is obviously dependant on user.
+// maxLength is a positive (>=0) amount, if equals to 0, there is no maximum length for TimeSeries.
 type TimeSeries struct {
 	Start    time.Time
 	End      time.Time
@@ -23,7 +26,12 @@ type TimeSeries struct {
 	sync.RWMutex
 }
 
+// NewTimeSeries initiates a TimeSeries.
+// A negative length panics, 0 means no limit.
 func NewTimeSeries(length int, interval Duration) *TimeSeries {
+	if length < 0 {
+		panic(panicNegativeLength)
+	}
 	return &TimeSeries{
 		Start:    time.Now(),
 		End:      time.Now(),
@@ -67,7 +75,7 @@ func (d *TimeSeries) Unsubscribe(id int) {
 // operation on the slice to the left, and a naive shift of +d.Interval on d.Start (data loss).
 // After appending value, it is broadcasted to subscribed chans.
 func (d *TimeSeries) Add(v int) {
-	if d.maxLength > 0 && len(d.Data) >= d.maxLength {
+	if len(d.Data) >= d.maxLength {
 		d.Data = d.Data[1:]
 		// trusting time shift
 		// assumes d.Interval is somehow respected at each Add call
@@ -100,6 +108,9 @@ func (d *TimeSeries) Padded() []int {
 // SetMaxLength resets d.maxLength.
 // If necessary, oldest data are cropped to match new maximum length.
 func (d *TimeSeries) SetMaxLength(length int) {
+	if length < 0 {
+		panic(panicNegativeLength)
+	}
 	d.maxLength = length
 	if len(d.Data) > d.maxLength {
 		stripN := len(d.Data) - d.maxLength
