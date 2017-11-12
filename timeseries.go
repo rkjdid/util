@@ -75,7 +75,7 @@ func (d *TimeSeries) Unsubscribe(id int) {
 // operation on the slice to the left, and a naive shift of +d.Interval on d.Start (data loss).
 // After appending value, it is broadcasted to subscribed chans.
 func (d *TimeSeries) Add(v int) {
-	if len(d.Data) >= d.maxLength {
+	if d.maxLength > 0 && len(d.Data) >= d.maxLength {
 		d.Data = d.Data[1:]
 		// trusting time shift
 		// assumes d.Interval is somehow respected at each Add call
