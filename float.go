@@ -14,7 +14,7 @@ func (f Float) String() string {
 func (f Float) MarshalJSON() ([]byte, error) {
 	b, err := f.MarshalText()
 	if err == nil {
-		b = []byte(fmt.Sprintf("\"%s\"", string(b)))
+		b = []byte(fmt.Sprintf("%s", string(b)))
 	}
 	return b, err
 }
@@ -34,7 +34,6 @@ func (f *Float) UnmarshalText(b []byte) (err error) {
 		*f = Float(fl)
 	} else if err != nil {
 		i, err2 := strconv.Atoi(s)
-		fmt.Println("phew, avoided", err)
 		if err2 != nil {
 			return fmt.Errorf("Float.UnmarshalText: %s", err)
 		}

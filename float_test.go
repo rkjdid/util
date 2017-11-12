@@ -13,7 +13,7 @@ type testFloatStruct struct {
 
 func TestFloat_MarshalJSON(t *testing.T) {
 	f := Float(1.0)
-	expect := fmt.Sprintf("\"%v\"", 1.0)
+	expect := fmt.Sprintf("%v", 1.0)
 
 	b, err := json.Marshal(f)
 	if err != nil {
